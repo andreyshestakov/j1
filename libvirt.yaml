@@ -1,6 +1,5 @@
 ---
-
-- name: name1
+- name: Create libvirt stuff
   gather_facts: true
   hosts: all
   tasks:

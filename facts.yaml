@@ -1,0 +1,17 @@
+---
+- name: Get info
+  gather_facts: true
+  hosts: all
+  tasks:
+    - name: Include all default extension files in vars
+      include_vars:
+        dir: vars
+
+    - name: setup
+      setup:
+
+    - name: mkdir out
+      local_action: file path="out" state=directory
+
+    - name: dump
+      local_action: copy content="{{ hostvars }}" dest=out/facts.yaml
