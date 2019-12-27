@@ -7,5 +7,11 @@ pipeline {
       }
     }
 
+    stage('archive facts') {
+      steps {
+        archiveArtifacts 'out/facts.yaml'
+      }
+    }
+
   }
 }
