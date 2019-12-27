@@ -1,0 +1,29 @@
+---
+
+- name: name1
+  gather_facts: true
+  hosts: all
+  tasks:
+    - name: Include all default extension files in vars
+      include_vars:
+        dir: vars
+
+    - name: setup
+      setup:
+
+    - name: OS check
+      fail:
+        msg: "Wrong OS '{{ hostvars[inventory_hostname].ansible_distribution }} {{ hostvars[inventory_hostname].ansible_distribution_version }}'."
+      when: 
+        hostvars[inventory_hostname].ansible_distribution != "Ubuntu" or 
+        hostvars[inventory_hostname].ansible_distribution_version != "18.04"
+
+    - name: install kvm
+      apt: pkg=qemu-kvm,libvirt-bin,virtinst,virt-top,bridge-utils,qemu,python-lxml state=present
+
+    - name: ensure libvirt-bin is started
+      service: name=libvirt-bin state=started enabled=true
+
+    - include_tasks: net.yaml
+      with_items: "{{ virt_networks }}"
+

@@ -1,0 +1,16 @@
+virt_networks:
+  - name: k8s_deploy
+    bridge_name: k8s_deploy
+    mode: nat
+    ip:
+      address: 10.0.0.1
+      netmask: 255.255.0.0
+    dhcp:
+      start: 10.0.0.10
+      end: 10.0.0.250
+  - name: k8s_control
+    bridge_name: k8s_control
+    mode: bridge
+  - name: k8s_data
+    bridge_name: k8s_data
+    mode: bridge

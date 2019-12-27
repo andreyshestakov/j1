@@ -1,0 +1,3 @@
+all: # keys must be unique, i.e. only one 'hosts' per group
+    hosts:
+        localhost:
