@@ -13,5 +13,11 @@ pipeline {
       }
     }
 
+    stage('libvirt') {
+      steps {
+        ansiblePlaybook(playbook: 'libvirt.yaml', become: true, colorized: true, credentialsId: 'andres', disableHostKeyChecking: true, inventoryContent: '192.168.43.19')
+      }
+    }
+
   }
 }
