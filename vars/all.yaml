@@ -14,3 +14,6 @@ virt_networks:
   - name: k8s_data
     bridge_name: k8s_data
     mode: bridge
+
+teleport_deb_version: 4.2.1
+teleport_deb_checksum: sha256:890bbcf524a716c605d577aabe35c3cbfa1313e8e44fc02ed52d318150e91533

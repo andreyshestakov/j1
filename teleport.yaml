@@ -1,0 +1,30 @@
+---
+- name: Teleport stuff
+  gather_facts: true
+  hosts: all
+  tasks:
+    - name: Include all default extension files in vars
+      include_vars:
+        dir: vars
+
+    - name: Download teleport deb
+      get_url:
+        url: "https://get.gravitational.com/teleport_{{ teleport_deb_version }}_amd64.deb"
+        dest: "/tmp/teleport_{{ teleport_deb_version }}_amd64.deb"
+        checksum: "{{ teleport_deb_checksum }}"
+
+    - name: Install teleport deb
+      apt:
+        deb: "/tmp/teleport_{{ teleport_deb_version }}_amd64.deb"
+
+    - name: Make dir for teleport
+      file:
+        path: /etc/teleport
+        state: directory
+        mode: 0700
+
+    - name: Put teleport license
+      copy:
+        src: license.pem
+        dest: /etc/teleport/license.pem
+        mode: 0600
