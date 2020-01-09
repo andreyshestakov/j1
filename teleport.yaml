@@ -2,6 +2,12 @@
 - name: Teleport stuff
   gather_facts: true
   hosts: all
+  handlers:
+    - name: teleport restart
+      systemd:
+        name: teleport
+        enabled: true
+        state: restarted
   tasks:
     - name: Include all default extension files in vars
       include_vars:
@@ -9,22 +15,37 @@
 
     - name: Download teleport deb
       get_url:
-        url: "https://get.gravitational.com/teleport_{{ teleport_deb_version }}_amd64.deb"
-        dest: "/tmp/teleport_{{ teleport_deb_version }}_amd64.deb"
+        url: "https://get.gravitational.com/teleport-ent_{{ teleport_deb_version }}_amd64.deb"
+        dest: "/tmp/teleport-ent_{{ teleport_deb_version }}_amd64.deb"
         checksum: "{{ teleport_deb_checksum }}"
 
     - name: Install teleport deb
       apt:
-        deb: "/tmp/teleport_{{ teleport_deb_version }}_amd64.deb"
+        deb: "/tmp/teleport-ent_{{ teleport_deb_version }}_amd64.deb"
 
     - name: Make dir for teleport
       file:
-        path: /etc/teleport
+        path: /var/lib/teleport
         state: directory
         mode: 0700
 
     - name: Put teleport license
       copy:
         src: license.pem
-        dest: /etc/teleport/license.pem
+        dest: /var/lib/teleport/license.pem
         mode: 0600
+
+    - name: Set teleport config
+      template:
+        src: teleport.yaml.j2
+        dest: /etc/teleport.yaml
+        mode: 0600
+      notify: teleport restart
+
+    - name: Teleport role
+      include_tasks: teleport_role.yaml
+      with_items: "{{ teleport_roles }}"
+
+    - name: Teleport trusted cluster
+      include_tasks: teleport_tc.yaml
+      with_items: "{{ teleport_trusted_clusters }}"

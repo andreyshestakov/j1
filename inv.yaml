@@ -1,0 +1,6 @@
+all:
+  hosts:
+    master0:
+      ansible_host: 10.0.0.15
+      ip: 127.0.0.1
+      ansible_ssh_user: ubuntu

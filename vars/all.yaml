@@ -16,4 +16,15 @@ virt_networks:
     mode: bridge
 
 teleport_deb_version: 4.2.1
-teleport_deb_checksum: sha256:890bbcf524a716c605d577aabe35c3cbfa1313e8e44fc02ed52d318150e91533
+teleport_deb_checksum: sha256:5159360c7dbcc1e8f2a963132beacfa4e9ce5d876371a01c87cc1dbb77c24d9d
+teleport_cluster_name: cluster01
+teleport_ca_pin: ""
+teleport_public_addr: "{{ ansible_host }}"
+teleport_roles:
+  - name: user
+    logins:
+      - ubuntu
+      - root
+teleport_trusted_clusters:
+  - name: teleport.cennso.com
+    token: token

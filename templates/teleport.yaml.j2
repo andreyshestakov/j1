@@ -1,0 +1,28 @@
+teleport:
+  data_dir: /var/lib/teleport
+  log:
+    output: stderr
+    severity: DEBUG
+  ca_pin: "{{ teleport_ca_pin }}"
+  storage:
+    type: dir
+
+auth_service:
+  license_file: /var/lib/teleport/license.pem
+  cluster_name: "{{ teleport_cluster_name }}"
+  enabled: "yes"
+  public_addr: "{{teleport_public_addr }}"
+
+ssh_service:
+  enabled: "yes"
+  public_addr: "{{teleport_public_addr }}"
+  commands:
+  - name: kernel
+    command: [uname, -r]
+    period: 1h0m0s
+
+proxy_service:
+  enabled: "yes"
+  listen_addr: 0.0.0.0:3023
+  web_listen_addr: 0.0.0.0:3080
+  public_addr: "{{teleport_public_addr }}"

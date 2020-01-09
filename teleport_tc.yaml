@@ -1,0 +1,26 @@
+- name: TC generate
+  template:
+    src: teleport_tc.yaml.j2
+    dest: "/tmp/teleport_tc_{{ item.name }}.yaml"
+    mode: 0600
+  vars:
+    cluster_name: "{{ item.name }}"
+    cluster_token: "{{ item.token }}"
+  register: cluster_yaml
+
+- name: TC check
+  command: "tctl get clusters/{{ item.name }}"
+  failed_when: tc_check.rc >= 2
+  register: tc_check
+  when: cluster_yaml.changed
+
+- name: TC delete
+  command: "tctl rm clusters/{{ item.name }}"
+  when:
+    - cluster_yaml.changed
+    - tc_check.rc == 0
+
+- name: TC create
+  command: "tctl create --force /tmp/teleport_tc_{{ item.name }}.yaml"
+  when:
+    - cluster_yaml.changed

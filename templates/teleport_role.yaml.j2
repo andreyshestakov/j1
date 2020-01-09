@@ -1,0 +1,11 @@
+kind: role
+version: v3
+metadata:
+  name: {{ role_name }}
+spec:
+  options:
+    max_session_ttl: 90h0m0s
+  allow:
+    logins: {{ role_logins|to_yaml }}
+    node_labels:
+      '*': '*'

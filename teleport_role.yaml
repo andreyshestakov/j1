@@ -1,0 +1,13 @@
+- name: Role generate
+  template:
+    src: teleport_role.yaml.j2
+    dest: "/tmp/teleport_role_{{ item.name }}.yaml"
+    mode: 0600
+  vars:
+    role_name: "{{ item.name }}"
+    role_logins: "{{ item.logins }}"
+  register: role_yaml
+
+- name: Role create
+  command: "tctl create --force /tmp/teleport_role_{{ item.name }}.yaml"
+  when: role_yaml.changed
